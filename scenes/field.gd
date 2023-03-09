@@ -22,6 +22,8 @@ func _process(delta):
 func new_game():
 	# set opponent as CPU AI
 	Main.opponent = "CPU"
+	Main.player_score = 0
+	Main.op_score = 0
 	# throw a coin to see who start attacking
 	var kickoff = Main.rng.randi()%2
 	$spr_coin.visible= true
@@ -29,13 +31,18 @@ func new_game():
 		print("head")
 		$spr_coin.texture = load("res://icon.svg")
 		Main.player = "attack"
+		Main.yards = 20
 	else:
 		print("tails")
 		$spr_coin.texture = load("res://tails.svg")
 		Main.player = "defend"
+		Main.yards = 80
 	$spr_coin/tmr_coin.start()
-	# set yards to the 20
-	Main.yards = 20
+	# set ball position yards to the 20, first down
+	Main.yards_to_down = 10
+	Main.down_number = 1
+	Main.move_ball()
+	
 	
 func _on_tmr_coin_timeout():
 	$spr_coin.visible = false
@@ -50,6 +57,7 @@ func draw_cards():
 		var cont = 250
 		for item in card_attack:
 			var obj = card_obj.instantiate()
+			Main.cards_objs.append(obj)
 			obj.start(item["name"], item["tooltip"], cuenta)
 			obj.translate(Vector2(40 + cont,526))
 			cont += 150
@@ -59,6 +67,7 @@ func draw_cards():
 		var cont = 400
 		for item in card_defend:
 			var obj = card_obj.instantiate()
+			Main.cards_objs.append(obj)
 			obj.start(item["name"], item["tooltip"],cuenta)
 			obj.translate(Vector2(40 + cont,526))
 			cont += 150

@@ -1,4 +1,9 @@
-[gd_scene format=3 uid="uid://bk7dhxibqkpik"]
+[gd_scene load_steps=3 format=3 uid="uid://bk7dhxibqkpik"]
+
+[ext_resource type="Script" path="res://scripts/gui.gd" id="1_l48ys"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5x11k"]
+bg_color = Color(0, 0, 0, 1)
 
 [node name="gui" type="Control"]
 layout_mode = 3
@@ -7,11 +12,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_l48ys")
 
 [node name="lbl_down" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 956.0
+offset_top = 6.0
+offset_right = 1046.0
+offset_bottom = 30.0
+scale = Vector2(2, 2)
+bbcode_enabled = true
+text = "[center][b][outline_size=4][outline_color=000000][color=FF0000]1st[/color] and 10"
+
+[node name="Panel" type="Panel" parent="lbl_down"]
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_right = 89.0
+offset_bottom = 24.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5x11k")
+metadata/_edit_lock_ = true
 
 [node name="lbl_tooltip" type="RichTextLabel" parent="."]
 visible = false
@@ -27,3 +47,26 @@ layout_mode = 0
 offset_right = 1034.0
 offset_bottom = 40.0
 mouse_filter = 2
+
+[node name="lbl_fumble" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 395.0
+offset_top = 250.0
+offset_right = 759.0
+offset_bottom = 324.0
+bbcode_enabled = true
+text = "[center][b][outline_size=4][outline_color=FFFFFF][color=000000] Fumble![/color]"
+
+[node name="tmr_fumble" type="Timer" parent="lbl_fumble"]
+wait_time = 2.0
+one_shot = true
+
+[node name="Panel" type="Panel" parent="lbl_fumble"]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 363.0
+offset_bottom = 70.0
+metadata/_edit_lock_ = true
+
+[connection signal="timeout" from="lbl_fumble/tmr_fumble" to="." method="_on_tmr_fumble_timeout"]

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://n55u84g4oami"]
+[gd_scene load_steps=6 format=3 uid="uid://n55u84g4oami"]
 
 [ext_resource type="Script" path="res://scenes/field.gd" id="1_fbfvc"]
 [ext_resource type="Texture2D" uid="uid://cgxle4nij7rnp" path="res://pics/field.png" id="2_kwtan"]
 [ext_resource type="Texture2D" uid="uid://c6frw8bri2gve" path="res://icon.svg" id="3_t3o6s"]
 [ext_resource type="PackedScene" uid="uid://bk7dhxibqkpik" path="res://scenes/gui.tscn" id="4_nhd3y"]
+[ext_resource type="PackedScene" uid="uid://b0bxmpjwtefge" path="res://scenes/ball.tscn" id="5_q8mcf"]
 
 [node name="field" type="Node2D"]
 script = ExtResource("1_fbfvc")
@@ -23,5 +24,8 @@ wait_time = 2.0
 one_shot = true
 
 [node name="gui" parent="." instance=ExtResource("4_nhd3y")]
+
+[node name="ball" parent="." instance=ExtResource("5_q8mcf")]
+position = Vector2(580, 326)
 
 [connection signal="timeout" from="spr_coin/tmr_coin" to="." method="_on_tmr_coin_timeout"]

@@ -96,13 +96,14 @@ func resolve_action(action):
 				temp_yards = pass_defense_results[op[1]][Main.die_roll[0]]
 			2:
 				temp_yards = blitz_results[op[1]][Main.die_roll[0]]
+	var _fumble = false
 	# check for double, triple, fumble etc
-		# Check number or rolls recorded or just one
+	# Check number or rolls recorded or just one
 	if len(Main.die_roll) > 1:
 		#Check fumbles
 		if (Main.die_roll[0] == 0) and (Main.die_roll[1] == 0):
 			print("fumble")
-			temp_yards = -1
+			_fumble = true
 		#Check double if two sixes, triple 3 sixes etc
 		elif Main.die_roll[0] == 5:
 			var multiplier = 0
@@ -110,10 +111,21 @@ func resolve_action(action):
 				if item == 5:
 					multiplier +=1
 			temp_yards = temp_yards * multiplier
-	#print(Main.die_roll)
-	#print(op)
-	#print(temp_yards)
-				
+	# free cards and disable tooltip
+	for item in Main.cards_objs:
+		item.queue_free()
+	Main.cards_objs.clear()
+	get_node("/root/field/gui/lbl_tooltip").visible = false
+	print(Main.die_roll)
+	print(temp_yards)
+	
+	# call Main function(temp_yards) to resolve yards and downs or fumble
+	if _fumble:
+		get_node("/root/field/gui/")._process_fumble()
+	else:
+		Main.process_down(temp_yards)
+	
+	
 # Returns opponent action
 func get_opponent_action():
 	var op_action
