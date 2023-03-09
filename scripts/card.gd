@@ -13,14 +13,14 @@ func start(name_card, toolt, cnt):
 	_name = name_card
 	_tooltip = toolt
 	_count = cnt
-	print(_count)
 	$lbl_name.text = "[center]\n\n" + _name
 	
 # mouse click on card
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		#Action choosed, go to resolve
-		resolve_action(_name)
+		resolve_action(_count)
+		
 # Enable/Disable tooltip on mouse over
 func _on_area_2d_mouse_entered():
 	get_node("/root/field/gui/lbl_tooltip").text = "[center]" + _tooltip
@@ -63,8 +63,8 @@ func resolve_action(action):
 		Main.die_roll.append(roll)
 		if roll == 5:
 			keep_rolling =true
-			#failgauard
-			if (len(Main.die_roll) > 6):
+			#failguard
+			if (len(Main.die_roll) > 10):
 				keep_rolling = false
 		elif roll == 0:
 			keep_rolling = true
@@ -74,23 +74,55 @@ func resolve_action(action):
 		else:
 			keep_rolling = false
 	
-	# Get opponent action, player action is "action"
+	# Get opponent action, player action is "action" in number (0 1 2)
+	# op is ["name action" - number action]
+	keep_rolling = true
+	var temp_yards = 0
 	var op = get_opponent_action()
-	
-	var attack_code = null
+	# Resolve yards
 	if Main.player == "attack":
-		pass
-	
-	
-
+		match (op[1]):
+			0:
+				temp_yards = run_defense_results[action][Main.die_roll[0]]
+			1:
+				temp_yards = pass_defense_results[action][Main.die_roll[0]]
+			2:
+				temp_yards = blitz_results[action][Main.die_roll[0]]
+	else:
+		match (action):
+			0:
+				temp_yards = run_defense_results[op[1]][Main.die_roll[0]]
+			1:
+				temp_yards = pass_defense_results[op[1]][Main.die_roll[0]]
+			2:
+				temp_yards = blitz_results[op[1]][Main.die_roll[0]]
+	# check for double, triple, fumble etc
+		# Check number or rolls recorded or just one
+	if len(Main.die_roll) > 1:
+		#Check fumbles
+		if (Main.die_roll[0] == 0) and (Main.die_roll[1] == 0):
+			print("fumble")
+			temp_yards = -1
+		#Check double if two sixes, triple 3 sixes etc
+		elif Main.die_roll[0] == 5:
+			var multiplier = 0
+			for item in Main.die_roll:
+				if item == 5:
+					multiplier +=1
+			temp_yards = temp_yards * multiplier
+	#print(Main.die_roll)
+	#print(op)
+	#print(temp_yards)
+				
 # Returns opponent action
 func get_opponent_action():
 	var op_action
+	var roll
 	# If playing against CPU
 	if Main.opponent == "CPU":
 		#Super AI Algorithm implementation
 		if Main.player == "attack":
-			var roll = Main.rng.randi()% 3
+			roll = Main.rng.randi()% 3
 			match roll:
 				0:
 					op_action = "RUN Defense"
@@ -99,7 +131,7 @@ func get_opponent_action():
 				2:
 					op_action= "BLITZ Defense"
 		else:
-			var roll = Main.rng.randi()% 5
+			roll = Main.rng.randi()% 5
 			match roll:
 				0:
 					op_action = "Inside RUN"
@@ -113,4 +145,4 @@ func get_opponent_action():
 					op_action = "Long PASS"
 	else:
 		print("Not implemented")
-	return op_action
+	return [op_action, roll]

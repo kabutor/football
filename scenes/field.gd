@@ -45,19 +45,22 @@ func _on_tmr_coin_timeout():
 # show the cards to the players
 func draw_cards():
 	print("draw")
+	var cuenta = 0
 	if Main.player == "attack":
 		var cont = 250
 		for item in card_attack:
 			var obj = card_obj.instantiate()
-			obj.start(item["name"], item["tooltip"], item.get_item_count())
+			obj.start(item["name"], item["tooltip"], cuenta)
 			obj.translate(Vector2(40 + cont,526))
 			cont += 150
 			self.add_child(obj)
+			cuenta+=1
 	else:
 		var cont = 400
 		for item in card_defend:
 			var obj = card_obj.instantiate()
-			obj.start(item["name"], item["tooltip"],item.get_item_count())
+			obj.start(item["name"], item["tooltip"],cuenta)
 			obj.translate(Vector2(40 + cont,526))
 			cont += 150
 			self.add_child(obj)
+			cuenta+=1
