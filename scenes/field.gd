@@ -14,6 +14,23 @@ const card_defend = [
 	{"name":"BLITZ Defense", "tooltip":"Use this risky formation if you believe your opponent will attempt a risky play."}
 	]
 func _ready():
+	# create cards
+	var cuenta = 0
+	for item in card_attack:
+		var obj = card_obj.instantiate()
+		Main.obj_att_cards.append(obj)
+		obj.start(item["name"], item["tooltip"], cuenta)
+		obj.visible = false
+		self.add_child(obj)
+		cuenta+=1
+	cuenta = 0
+	for item in card_defend:
+		var obj = card_obj.instantiate()
+		Main.obj_def_cards.append(obj)
+		obj.start(item["name"], item["tooltip"],cuenta)
+		obj.visible = false
+		self.add_child(obj)
+		cuenta+=1
 	new_game()
 
 func _process(delta):
@@ -52,24 +69,16 @@ func _on_tmr_coin_timeout():
 # show the cards to the players
 func draw_cards():
 	print("draw")
-	var cuenta = 0
 	if Main.player == "attack":
 		var cont = 250
-		for item in card_attack:
-			var obj = card_obj.instantiate()
-			Main.cards_objs.append(obj)
-			obj.start(item["name"], item["tooltip"], cuenta)
-			obj.translate(Vector2(40 + cont,526))
+		for item in Main.obj_att_cards:
+			item.position = Vector2(40 + cont,526)
+			item.visible = true
 			cont += 150
-			self.add_child(obj)
-			cuenta+=1
 	else:
 		var cont = 400
-		for item in card_defend:
-			var obj = card_obj.instantiate()
-			Main.cards_objs.append(obj)
-			obj.start(item["name"], item["tooltip"],cuenta)
-			obj.translate(Vector2(40 + cont,526))
+		for item in Main.obj_def_cards:
+			item.position = Vector2(40 + cont,526)
+			item.visible = true
 			cont += 150
-			self.add_child(obj)
-			cuenta+=1
+			

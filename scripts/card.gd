@@ -19,6 +19,7 @@ func start(name_card, toolt, cnt):
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		#Action choosed, go to resolve
+		self.position = Vector2(300,330)
 		resolve_action(_count)
 		
 # Enable/Disable tooltip on mouse over
@@ -111,10 +112,16 @@ func resolve_action(action):
 				if item == 5:
 					multiplier +=1
 			temp_yards = temp_yards * multiplier
+	# wait and show results
+	$tmr_card.start()
+	await $tmr_card.timeout
+	# TODO: show other card table and roll
 	# free cards and disable tooltip
-	for item in Main.cards_objs:
-		item.queue_free()
-	Main.cards_objs.clear()
+	for item in Main.obj_att_cards:
+		item.visible = false
+	for item in Main.obj_def_cards:
+		item.visible = false
+		
 	get_node("/root/field/gui/lbl_tooltip").visible = false
 	print(Main.die_roll)
 	print(temp_yards)

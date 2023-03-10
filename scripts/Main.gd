@@ -8,9 +8,11 @@ var die_roll = []
 var yards = null
 var yards_to_down = null
 var down_number = null
-var cards_objs = []
 var player_score = null
 var op_score = null
+var obj_att_cards = []
+var obj_def_cards = []
+
 
 func _ready():
 	pass
