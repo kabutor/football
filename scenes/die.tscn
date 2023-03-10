@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://dftaxrh2ge73l"]
+
+[ext_resource type="Texture2D" uid="uid://cn5sy30n4b3pi" path="res://pics/dice-six-faces-six.svg" id="1_3erkv"]
+[ext_resource type="Script" path="res://scripts/die.gd" id="2_lxtdy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pi7vl"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="die" type="Sprite2D"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_3erkv")
+script = ExtResource("2_lxtdy")
+
+[node name="tmr_die" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+offset_left = -210.0
+offset_top = -205.0
+offset_right = 210.0
+offset_bottom = 215.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pi7vl")

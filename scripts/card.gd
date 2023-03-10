@@ -114,9 +114,21 @@ func resolve_action(action):
 			temp_yards = temp_yards * multiplier
 	# wait and show results
 	$tmr_card.start()
-	await $tmr_card.timeout
 	# TODO: show other card table and roll
-	# free cards and disable tooltip
+	if Main.player == "attack":
+		Main.obj_def_cards[op[1]].visible = true
+		Main.obj_def_cards[op[1]].position = Vector2(900,330)
+	else:
+		Main.obj_att_cards[op[1]].visible = true
+		Main.obj_att_cards[op[1]].position = Vector2(900,330)
+	var _die = get_node("/root/field/die")
+	_die.visible=true
+	_die.go_roll(Main.die_roll[0])
+	_die.position = Vector2(500,330)
+	# wait till here	
+	await $tmr_card.timeout
+	_die.visible = false
+	# hide cards and disable tooltip
 	for item in Main.obj_att_cards:
 		item.visible = false
 	for item in Main.obj_def_cards:
