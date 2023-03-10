@@ -40,6 +40,9 @@ func process_down(yards_moved):
 	yards_to_down -= yards_moved
 	if player == "attack":
 		yards += yards_moved
+		# bug where you can go farther than 0 defending
+		if yards < 0:
+			yards=0
 		# check if score
 		if yards > 100:
 			touchdown()	
@@ -55,6 +58,9 @@ func process_down(yards_moved):
 			change_sides()
 	else:
 		yards -= yards_moved
+		# bug where you can go farther than 0 defending
+		if yards > 100:
+			yards=100
 		# check if score
 		if yards < 0:
 			touchdown()	

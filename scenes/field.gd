@@ -60,7 +60,6 @@ func new_game():
 	Main.down_number = 1
 	Main.move_ball()
 	
-	
 func _on_tmr_coin_timeout():
 	$spr_coin.visible = false
 	#start turn after setup

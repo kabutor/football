@@ -19,7 +19,7 @@ func start(name_card, toolt, cnt):
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		#Action choosed, go to resolve
-		self.position = Vector2(300,330)
+		self.position = Vector2(200,330)
 		resolve_action(_count)
 		
 # Enable/Disable tooltip on mouse over
@@ -63,7 +63,11 @@ func resolve_action(action):
 		var roll = Main.rng.randi()%6
 		Main.die_roll.append(roll)
 		if roll == 5:
-			keep_rolling =true
+			# fix a case where if you roll 1 and 5 it rolls again
+			if Main.die_roll.has(0):
+				keep_rolling = false
+			else:
+				keep_rolling =true
 			#failguard
 			if (len(Main.die_roll) > 10):
 				keep_rolling = false
@@ -113,37 +117,46 @@ func resolve_action(action):
 					multiplier +=1
 			temp_yards = temp_yards * multiplier
 	# wait and show results
-	$tmr_card.start()
+	
 	# TODO: show other card table and roll
 	if Main.player == "attack":
 		Main.obj_def_cards[op[1]].visible = true
-		Main.obj_def_cards[op[1]].position = Vector2(900,330)
+		Main.obj_def_cards[op[1]].position = Vector2(1000,330)
 	else:
 		Main.obj_att_cards[op[1]].visible = true
-		Main.obj_att_cards[op[1]].position = Vector2(900,330)
+		Main.obj_att_cards[op[1]].position = Vector2(1000,330)
+	# Show die rolls
 	var _die = get_node("/root/field/die")
-	_die.visible=true
-	_die.go_roll(Main.die_roll[0])
-	_die.position = Vector2(500,330)
+	for item in Main.die_roll:
+		$tmr_card.start()
+		_die.visible=true
+		_die.go_roll(item)
+		_die.position = Vector2(550,330)
+		await $tmr_card.timeout
+
+	# second 2s wait
+	$tmr_card.start()
+	#show yards run
+	var _node_yards_r = get_node("/root/field/gui")
+	_node_yards_r.yards_runned(temp_yards)
 	# wait till here	
 	await $tmr_card.timeout
+	# hide cards and disable tooltip, yards runned and die
 	_die.visible = false
-	# hide cards and disable tooltip
+	get_node("/root/field/gui/lbl_yards_run").visible = false
 	for item in Main.obj_att_cards:
 		item.visible = false
 	for item in Main.obj_def_cards:
 		item.visible = false
 		
 	get_node("/root/field/gui/lbl_tooltip").visible = false
-	print(Main.die_roll)
-	print(temp_yards)
-	
+	#print(Main.die_roll)
+	#print(temp_yards)
 	# call Main function(temp_yards) to resolve yards and downs or fumble
 	if _fumble:
 		get_node("/root/field/gui/")._process_fumble()
 	else:
 		Main.process_down(temp_yards)
-	
 	
 # Returns opponent action
 func get_opponent_action():

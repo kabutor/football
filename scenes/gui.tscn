@@ -13,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_l48ys")
+metadata/_edit_lock_ = true
 
 [node name="lbl_down" type="RichTextLabel" parent="."]
 layout_mode = 0
@@ -67,6 +68,26 @@ show_behind_parent = true
 layout_mode = 0
 offset_right = 363.0
 offset_bottom = 70.0
+metadata/_edit_lock_ = true
+
+[node name="lbl_yards_run" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 533.0
+offset_top = 162.0
+offset_right = 577.0
+offset_bottom = 190.0
+scale = Vector2(2, 2)
+bbcode_enabled = true
+text = "[center][b][outline_size=4][outline_color=000000][color=FF0000]0[/color] "
+
+[node name="Panel" type="Panel" parent="lbl_yards_run"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -2.0
+offset_top = -4.0
+offset_right = 44.0
+offset_bottom = 31.0
 metadata/_edit_lock_ = true
 
 [connection signal="timeout" from="lbl_fumble/tmr_fumble" to="." method="_on_tmr_fumble_timeout"]

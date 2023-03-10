@@ -32,7 +32,7 @@ scale = Vector2(1.627, 1)
 shape = SubResource("RectangleShape2D_oox60")
 
 [node name="tmr_card" type="Timer" parent="."]
-wait_time = 4.0
+wait_time = 2.0
 one_shot = true
 
 [connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
