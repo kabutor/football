@@ -20,6 +20,10 @@ func _ready():
 		var obj = card_obj.instantiate()
 		Main.obj_att_cards.append(obj)
 		obj.start(item["name"], item["tooltip"], cuenta)
+		if cuenta == 0 or cuenta == 1:
+			obj.get_child(0).modulate = Color(0, 0.392157, 0, 1 )
+		elif cuenta == 4:
+			obj.get_child(0).modulate = Color(0.545098, 0, 0, 1)
 		obj.visible = false
 		self.add_child(obj)
 		cuenta+=1
@@ -28,6 +32,10 @@ func _ready():
 		var obj = card_obj.instantiate()
 		Main.obj_def_cards.append(obj)
 		obj.start(item["name"], item["tooltip"],cuenta)
+		if cuenta == 0:
+			obj.get_child(0).modulate = Color(0, 0.392157, 0, 1 )
+		elif cuenta == 2:
+			obj.get_child(0).modulate = Color(0.545098, 0, 0, 1)
 		obj.visible = false
 		self.add_child(obj)
 		cuenta+=1
@@ -72,6 +80,10 @@ func draw_cards():
 		var cont = 250
 		for item in Main.obj_att_cards:
 			item.position = Vector2(40 + cont,526)
+			print(cont)
+			#if cont == 250 or cont ==400:
+			
+			#	item.get_child(0).modulate = Color(1,0,0)
 			item.visible = true
 			cont += 150
 	else:

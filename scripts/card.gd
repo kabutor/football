@@ -19,9 +19,9 @@ func start(name_card, toolt, cnt):
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		#Action choosed, go to resolve
-		self.position = Vector2(450,130)
+		self.position = Vector2(400,130)
 		resolve_action(_count)
-		
+
 # Enable/Disable tooltip on mouse over
 func _on_area_2d_mouse_entered():
 	get_node("/root/field/gui/lbl_tooltip").text = "[center]" + _tooltip
@@ -133,7 +133,6 @@ func resolve_action(action):
 		_die.go_roll(item)
 		_die.position = Vector2(550,330)
 		await $tmr_card.timeout
-
 	# second 2s wait
 	$tmr_card.start()
 	#show yards run except if fumble
@@ -149,7 +148,6 @@ func resolve_action(action):
 		item.visible = false
 	for item in Main.obj_def_cards:
 		item.visible = false
-		
 	get_node("/root/field/gui/lbl_tooltip").visible = false
 	#print(Main.die_roll)
 	#print(temp_yards)
