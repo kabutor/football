@@ -12,7 +12,7 @@ var player_score = null
 var op_score = null
 var obj_att_cards = []
 var obj_def_cards = []
-
+var punt_cards = []
 
 func _ready():
 	pass
@@ -74,18 +74,40 @@ func process_down(yards_moved):
 		
 		if down_number >4:
 			change_sides()
-	print(Main.yards)
+
 	# raw and ugly update banner and draw cards
 	get_node("/root/field/gui")._update_down_banner()
 	move_ball()
 	get_node("/root/field").draw_cards()
+
+func process_punt(yards_moved):
+	if player == "attack":
+		yards += yards_moved
+		if yards > 80:
+			#touchback
+			yards = 80
+	else:
+		yards -= yards_moved
+		if yards < 20:
+			yards = 20
+	change_sides()
+	
+func field_goal():
+	print("field goal")
+	if player == "attack":
+		player_score +=3
+		yards = 80
+	else:
+		op_score += 3
+		yards = 20
+	change_sides()
 	
 func touchdown():
 	print("touchdown")
 	if player == "attack":
-		player_score +=6
+		player_score += 7
 		yards = 80
 	else:
-		op_score += 6
+		op_score += 7
 		yards = 20
 	change_sides()

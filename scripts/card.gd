@@ -84,15 +84,34 @@ func resolve_action(action):
 	keep_rolling = true
 	var temp_yards = 0
 	var op = get_opponent_action()
-	# Resolve yards
+	# Resolve yards and punt and field goal 0 - nothing 1- fail 2- success
+	var _field_goal = 0
 	if Main.player == "attack":
-		match (op[1]):
-			0:
-				temp_yards = run_defense_results[action][Main.die_roll[0]]
-			1:
-				temp_yards = pass_defense_results[action][Main.die_roll[0]]
-			2:
-				temp_yards = blitz_results[action][Main.die_roll[0]]
+		if action > 5:
+			#field goal and Punt
+			match (action):
+				10:
+					temp_yards = 0
+					# mark that is at least trying
+					_field_goal = 1
+					if Main.player == "attack":
+						var _difficult = (100 - Main.yards) / 10
+						print(Main.die_roll[0])
+						if (Main.die_roll[0]+1 > _difficult):
+							print("field goal in card")
+							_field_goal = 2
+				20:
+					temp_yards = 10 * (Main.die_roll[0] + 1)
+		else:
+			# rest of actions
+			match (op[1]):
+				0:
+					temp_yards = run_defense_results[action][Main.die_roll[0]]
+				1:
+					temp_yards = pass_defense_results[action][Main.die_roll[0]]
+				2:
+					temp_yards = blitz_results[action][Main.die_roll[0]]
+				
 	else:
 		match (action):
 			0:
@@ -118,8 +137,14 @@ func resolve_action(action):
 			temp_yards = temp_yards * multiplier
 	# wait and show results
 	
-	# TODO: show other card table and roll
-	if Main.player == "attack":
+	# show opponent card first, FIELD GOAL and PUNT, then the plays
+	if op[1] == 10:
+		Main.punt_cards[0].visible = true
+		Main.punt_cards[0].position = Vector2(750,130)
+	elif op[1] == 20:
+		Main.punt_cards[0].visible = true
+		Main.punt_cards[0].position = Vector2(750,130)
+	elif Main.player == "attack":
 		Main.obj_def_cards[op[1]].visible = true
 		Main.obj_def_cards[op[1]].position = Vector2(750,130)
 	else:
@@ -127,16 +152,27 @@ func resolve_action(action):
 		Main.obj_att_cards[op[1]].position = Vector2(750,130)
 	# Show die rolls
 	var _die = get_node("/root/field/die")
-	for item in Main.die_roll:
+	# show FIELD GOAL
+	if _field_goal > 0:
 		$tmr_card.start()
+		var node_goal = get_node("/root/field/gui/lbl_field_goal")
+		node_goal.visible = true
+		node_goal.text= "\n[center][b][color=000000]FIELD GOAL \n Distance: " + str(100 - Main.yards)
 		_die.visible=true
-		_die.go_roll(item)
+		_die.go_roll(Main.die_roll[0])
 		_die.position = Vector2(550,330)
 		await $tmr_card.timeout
+	else:
+		for item in Main.die_roll:
+			$tmr_card.start()
+			_die.visible=true
+			_die.go_roll(item)
+			_die.position = Vector2(550,330)
+			await $tmr_card.timeout
 	# second 2s wait
 	$tmr_card.start()
 	#show yards run except if fumble
-	if !(_fumble):
+	if !(_fumble) and _field_goal == 0:
 		var _node_yards_r = get_node("/root/field/gui")
 		_node_yards_r.yards_runned(temp_yards)
 	# wait till here	
@@ -148,15 +184,24 @@ func resolve_action(action):
 		item.visible = false
 	for item in Main.obj_def_cards:
 		item.visible = false
+	for item in Main.punt_cards:
+		item.visible = false
 	get_node("/root/field/gui/lbl_tooltip").visible = false
+	get_node("/root/field/gui/lbl_field_goal").visible = false
 	#print(Main.die_roll)
 	#print(temp_yards)
 	# call Main function(temp_yards) to resolve yards and downs or fumble
 	if _fumble:
 		get_node("/root/field/gui/")._process_fumble()
+	elif _field_goal == 3:
+		Main.field_goal()
+	elif action == 20:
+		print("punt")
+		Main.process_punt(temp_yards)
 	else:
 		Main.process_down(temp_yards)
 	
+
 # Returns opponent action
 func get_opponent_action():
 	var op_action

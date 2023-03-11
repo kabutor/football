@@ -39,6 +39,20 @@ func _ready():
 		obj.visible = false
 		self.add_child(obj)
 		cuenta+=1
+	# create Field Goal and Punt cards
+	var obj = card_obj.instantiate()
+	Main.punt_cards.append(obj)
+	obj.start("Field Goal", "Try to score a Field Goal, you havo to roll higher than yards/10",10)
+	obj.get_child(0).modulate = Color(1, 0.270588, 0, 1)
+	obj.visible = false
+	self.add_child(obj)
+	obj = card_obj.instantiate()
+	Main.punt_cards.append(obj)
+	obj.start("Punt", "Kick the ball as farther away as you can, distance is die * 10 yards",20)
+	obj.get_child(0).modulate = Color(1, 0.270588, 0, 1)
+	obj.visible = false
+	self.add_child(obj)
+	
 	new_game()
 
 func _process(delta):
@@ -53,12 +67,10 @@ func new_game():
 	var kickoff = Main.rng.randi()%2
 	$spr_coin.visible= true
 	if kickoff == 0:
-		print("head")
 		$spr_coin.texture = load("res://icon.svg")
 		Main.player = "attack"
 		Main.yards = 20
 	else:
-		print("tails")
 		$spr_coin.texture = load("res://tails.svg")
 		Main.player = "defend"
 		Main.yards = 80
@@ -80,12 +92,14 @@ func draw_cards():
 		var cont = 250
 		for item in Main.obj_att_cards:
 			item.position = Vector2(40 + cont,526)
-			print(cont)
-			#if cont == 250 or cont ==400:
-			
-			#	item.get_child(0).modulate = Color(1,0,0)
 			item.visible = true
 			cont += 150
+		if Main.down_number == 4:
+			cont = 200
+			for item in Main.punt_cards:
+				item.visible = true
+				item.position = Vector2(1100, cont)
+				cont +=200
 	else:
 		var cont = 400
 		for item in Main.obj_def_cards:

@@ -17,10 +17,10 @@ metadata/_edit_lock_ = true
 
 [node name="lbl_down" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_left = 956.0
-offset_top = 6.0
-offset_right = 1046.0
-offset_bottom = 30.0
+offset_left = 495.0
+offset_top = -1.0
+offset_right = 585.0
+offset_bottom = 23.0
 scale = Vector2(2, 2)
 bbcode_enabled = true
 text = "[center][b][outline_size=4][outline_color=000000][color=FF0000]1st[/color] and 10"
@@ -91,3 +91,20 @@ offset_top = -4.0
 offset_right = 44.0
 offset_bottom = 31.0
 metadata/_edit_lock_ = true
+
+[node name="lbl_field_goal" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 28.0
+offset_top = 160.0
+offset_right = 1132.0
+offset_bottom = 429.0
+bbcode_enabled = true
+text = "\\n[center][b][color=000000]FIELD GOAL[/color] \\n Distance:"
+
+[node name="Panel" type="Panel" parent="lbl_field_goal"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = -1.0
+offset_right = 1115.0
+offset_bottom = 283.0
