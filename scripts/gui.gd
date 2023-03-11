@@ -21,24 +21,33 @@ func _process_fumble():
 	var _node_die = get_node("/root/field/die")
 	# att roll
 	$lbl_fumble/tmr_fumble.start()
+	_node_die.visible = true
 	_node_die.go_roll(att_roll - 1)
 	_node_die.position = Vector2(200,330)
 	await $lbl_fumble/tmr_fumble.timeout
 	# def roll
 	$lbl_fumble/tmr_fumble.start()
 	_node_die.go_roll(def_roll - 1)
-	_node_die.position = Vector2(700,330)
+	_node_die.position = Vector2(900,330)
 	await $lbl_fumble/tmr_fumble.timeout
 	if def_roll > att_roll:
-		$lbl_fumble.text = "[center][b][outline_size=4][outline_color=FFFFFF][color=000000] Fumble![/color]\nDefence takes the ball!!"
+		$lbl_fumble.text = "[center][b][outline_size=1][outline_color=FFFFFF][color=0000FF] Fumble![/color]\nDefence takes the ball!!"
 		fumble_change_side = true
 	else:
-		$lbl_fumble.text = "[center][b][outline_size=4][outline_color=FFFFFF][color=000000] Fumble![/color]\nAttack recover the ball!!"
+		$lbl_fumble.text = "[center][b][outline_size=1][outline_color=FFFFFF][color=FF0000] Fumble![/color]\nAttack recover the ball!!"
 		fumble_change_side = false
+	$lbl_fumble/tmr_fumble.wait_time = 2
 	$lbl_fumble/tmr_fumble.start()
-func _on_tmr_fumble_timeout():
+	# end of fumble
+	await $lbl_fumble/tmr_fumble.timeout
+	# reset time
+	$lbl_fumble/tmr_fumble.wait_time = 1
 	$lbl_fumble.visible = false
-	if fumble_change_side:
+	_node_die.visible = false
+	if fumble_change_side:	
 		Main.change_sides()
 	else:
 		Main.process_down(0)
+
+
+	
