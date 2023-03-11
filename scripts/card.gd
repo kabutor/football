@@ -19,7 +19,7 @@ func start(name_card, toolt, cnt):
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		#Action choosed, go to resolve
-		self.position = Vector2(200,330)
+		self.position = Vector2(450,130)
 		resolve_action(_count)
 		
 # Enable/Disable tooltip on mouse over
@@ -121,10 +121,10 @@ func resolve_action(action):
 	# TODO: show other card table and roll
 	if Main.player == "attack":
 		Main.obj_def_cards[op[1]].visible = true
-		Main.obj_def_cards[op[1]].position = Vector2(1000,330)
+		Main.obj_def_cards[op[1]].position = Vector2(750,130)
 	else:
 		Main.obj_att_cards[op[1]].visible = true
-		Main.obj_att_cards[op[1]].position = Vector2(1000,330)
+		Main.obj_att_cards[op[1]].position = Vector2(750,130)
 	# Show die rolls
 	var _die = get_node("/root/field/die")
 	for item in Main.die_roll:
@@ -136,9 +136,10 @@ func resolve_action(action):
 
 	# second 2s wait
 	$tmr_card.start()
-	#show yards run
-	var _node_yards_r = get_node("/root/field/gui")
-	_node_yards_r.yards_runned(temp_yards)
+	#show yards run except if fumble
+	if !(_fumble):
+		var _node_yards_r = get_node("/root/field/gui")
+		_node_yards_r.yards_runned(temp_yards)
 	# wait till here	
 	await $tmr_card.timeout
 	# hide cards and disable tooltip, yards runned and die

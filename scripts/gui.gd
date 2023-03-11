@@ -18,6 +18,17 @@ func _process_fumble():
 	$lbl_fumble.visible = true
 	var att_roll = Main.rng.randi()%6 +1
 	var def_roll = Main.rng.randi()%6 +1
+	var _node_die = get_node("/root/field/die")
+	# att roll
+	$lbl_fumble/tmr_fumble.start()
+	_node_die.go_roll(att_roll - 1)
+	_node_die.position = Vector2(200,330)
+	await $lbl_fumble/tmr_fumble.timeout
+	# def roll
+	$lbl_fumble/tmr_fumble.start()
+	_node_die.go_roll(def_roll - 1)
+	_node_die.position = Vector2(700,330)
+	await $lbl_fumble/tmr_fumble.timeout
 	if def_roll > att_roll:
 		$lbl_fumble.text = "[center][b][outline_size=4][outline_color=FFFFFF][color=000000] Fumble![/color]\nDefence takes the ball!!"
 		fumble_change_side = true

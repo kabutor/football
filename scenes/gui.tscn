@@ -60,7 +60,6 @@ bbcode_enabled = true
 text = "[center][b][outline_size=4][outline_color=FFFFFF][color=000000] Fumble![/color]"
 
 [node name="tmr_fumble" type="Timer" parent="lbl_fumble"]
-wait_time = 2.0
 one_shot = true
 
 [node name="Panel" type="Panel" parent="lbl_fumble"]
