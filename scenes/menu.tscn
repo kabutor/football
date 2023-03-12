@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://ccwleo2oiq7a7"]
+
+[ext_resource type="Texture2D" uid="uid://mvi1v15ny0od" path="res://pics/cover_football.png" id="1_hnfff"]
+[ext_resource type="Texture2D" uid="uid://q8phjqmdsvq6" path="res://pics/banner.png" id="2_pr6qu"]
+[ext_resource type="Texture2D" uid="uid://bwrn7lkvvuqgq" path="res://pics/play_button.png" id="3_8k54h"]
+[ext_resource type="Texture2D" uid="uid://db377253mstbw" path="res://pics/American_football.svg" id="4_5vf3w"]
+
+[node name="menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1179.0
+offset_bottom = 674.0
+metadata/_edit_lock_ = true
+
+[node name="CoverFootball" type="Sprite2D" parent="."]
+position = Vector2(341, 345)
+scale = Vector2(0.884115, 0.884115)
+texture = ExtResource("1_hnfff")
+metadata/_edit_lock_ = true
+
+[node name="Banner" type="Sprite2D" parent="."]
+position = Vector2(851, 167)
+scale = Vector2(0.557886, 0.596045)
+texture = ExtResource("2_pr6qu")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 336.0
+offset_right = 1182.0
+offset_bottom = 505.0
+scale = Vector2(0.5, 0.5)
+texture_normal = ExtResource("3_8k54h")
+
+[node name="AmericanFootball" type="Sprite2D" parent="."]
+position = Vector2(1130, 536)
+scale = Vector2(0.221, 0.221)
+texture = ExtResource("4_5vf3w")

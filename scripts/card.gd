@@ -205,19 +205,37 @@ func resolve_action(action):
 # Returns opponent action
 func get_opponent_action():
 	var op_action
-	var roll
+	var decision = null
+	var roll = null
 	# If playing against CPU
 	if Main.opponent == "CPU":
-		#Super AI Algorithm implementation
+		# AI Decision will be null until choose
 		if Main.player == "attack":
-			roll = Main.rng.randi()% 3
-			match roll:
-				0:
-					op_action = "RUN Defense"
-				1:
-					op_action = "PASS Defense"
-				2:
-					op_action= "BLITZ Defense"
+			# Punt or Field goal on run on the 4th down
+			if Main.down_number == 4:
+				if Main.yards < 40:
+					if Main.rng.randi()%100 < 90:
+						# Go for field goal
+						decision = 10
+				elif Main.yards <= 50 and !decision:
+					if Main.rng.randi()%100 < 50:
+						decision = 10
+					if Main.rng.randi()%100 < 20:
+						decision = 20
+				elif Main.Yards > 50:
+					# punt
+					decision = 20
+			# if there was not prevous decision, just run
+			# defence should be the more yards needed, the less downs the higher you have to defend passes
+			if !(decision):
+				roll = Main.rng.randi()% 3
+				match roll:
+					0:
+						op_action = "RUN Defense"
+					1:
+						op_action = "PASS Defense"
+					2:
+						op_action= "BLITZ Defense"
 		else:
 			roll = Main.rng.randi()% 5
 			match roll:
