@@ -78,6 +78,7 @@ func new_game():
 	# set ball position yards to the 20, first down
 	Main.yards_to_down = 10
 	Main.down_number = 1
+	$gui.update_score()
 	Main.move_ball()
 	
 func _on_tmr_coin_timeout():

@@ -100,6 +100,7 @@ func field_goal():
 	else:
 		op_score += 3
 		yards = 20
+	get_node("/root/field/gui").update_score()
 	change_sides()
 	
 func touchdown():
@@ -110,4 +111,5 @@ func touchdown():
 	else:
 		op_score += 7
 		yards = 20
+	get_node("/root/field/gui").update_score()
 	change_sides()

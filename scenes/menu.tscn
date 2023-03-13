@@ -14,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
 offset_right = 1179.0
 offset_bottom = 674.0
 metadata/_edit_lock_ = true

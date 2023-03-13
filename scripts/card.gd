@@ -94,12 +94,11 @@ func resolve_action(action):
 					temp_yards = 0
 					# mark that is at least trying
 					_field_goal = 1
-					if Main.player == "attack":
-						var _difficult = (100 - Main.yards) / 10
-						print(Main.die_roll[0])
-						if (Main.die_roll[0]+1 > _difficult):
-							print("field goal in card")
-							_field_goal = 2
+					var _difficult = (100 - Main.yards) / 10
+					print(Main.die_roll[0])
+					if (Main.die_roll[0]+1 > _difficult):
+						print("field goal in card")
+						_field_goal = 2
 				20:
 					temp_yards = 10 * (Main.die_roll[0] + 1)
 		else:
@@ -113,13 +112,27 @@ func resolve_action(action):
 					temp_yards = blitz_results[action][Main.die_roll[0]]
 				
 	else:
-		match (action):
-			0:
-				temp_yards = run_defense_results[op[1]][Main.die_roll[0]]
-			1:
-				temp_yards = pass_defense_results[op[1]][Main.die_roll[0]]
-			2:
-				temp_yards = blitz_results[op[1]][Main.die_roll[0]]
+		if op[1] > 5:
+			match(op[1]):
+				10:
+					temp_yards = 0
+					# mark that is at least trying
+					_field_goal = 1
+					var _difficult = (Main.yards) / 10
+					print(Main.die_roll[0])
+					if (Main.die_roll[0]+1 > _difficult):
+						print("field goal in")
+						_field_goal = 2
+				20:
+					temp_yards = 10 * (Main.die_roll[0] + 1)
+		else:
+			match(action):
+				0:
+					temp_yards = run_defense_results[op[1]][Main.die_roll[0]]
+				1:
+					temp_yards = pass_defense_results[op[1]][Main.die_roll[0]]
+				2:
+					temp_yards = blitz_results[op[1]][Main.die_roll[0]]
 	var _fumble = false
 	# check for double, triple, fumble etc
 	# Check number or rolls recorded or just one
@@ -142,8 +155,8 @@ func resolve_action(action):
 		Main.punt_cards[0].visible = true
 		Main.punt_cards[0].position = Vector2(750,130)
 	elif op[1] == 20:
-		Main.punt_cards[0].visible = true
-		Main.punt_cards[0].position = Vector2(750,130)
+		Main.punt_cards[1].visible = true
+		Main.punt_cards[1].position = Vector2(750,130)
 	elif Main.player == "attack":
 		Main.obj_def_cards[op[1]].visible = true
 		Main.obj_def_cards[op[1]].position = Vector2(750,130)
@@ -157,7 +170,10 @@ func resolve_action(action):
 		$tmr_card.start()
 		var node_goal = get_node("/root/field/gui/lbl_field_goal")
 		node_goal.visible = true
-		node_goal.text= "\n[center][b][color=000000]FIELD GOAL \n Distance: " + str(100 - Main.yards)
+		if Main.player == "attack":
+			node_goal.text= "\n[center][b][color=000000]FIELD GOAL \n Distance: " + str(100 - Main.yards)
+		else:
+			node_goal.text= "\n[center][b][color=000000]FIELD GOAL \n Distance: " + str(Main.yards)
 		_die.visible=true
 		_die.go_roll(Main.die_roll[0])
 		_die.position = Vector2(550,330)
@@ -195,11 +211,11 @@ func resolve_action(action):
 		get_node("/root/field/gui/")._process_fumble()
 	elif _field_goal == 3:
 		Main.field_goal()
-	elif action == 20:
-		print("punt")
+	elif action == 20 or op[1] == 20:
 		Main.process_punt(temp_yards)
 	else:
 		Main.process_down(temp_yards)
+	
 	
 
 # Returns opponent action
@@ -209,7 +225,7 @@ func get_opponent_action():
 	var roll = null
 	# If playing against CPU
 	if Main.opponent == "CPU":
-		var downs_left = 4 - Main.yards_to_down
+		var downs_left = 4 - Main.down_number
 		# AI Decision will be null until choose
 		if Main.player == "attack":
 			# CPU defense decision tree Main.rng.randi()%100 is a 100 die
@@ -223,12 +239,12 @@ func get_opponent_action():
 						decision = 2
 			elif Main.yards_to_down > 4 and Main.yards_to_down <= 10:
 				# run defense more likely as more downs are left
-				if Main.rng.randi()%100 < (60 - (10 * downs_left)):
-					decision = 1
+				if Main.rng.randi()%100 < (60 + (5 * Main.down_number)):
+					decision = 2
 				else:
 					# no sure about this 
-					if Main.rng.randi()%100 < (50 - (downs_left * 10)):
-						decision = 2
+					if Main.rng.randi()%100 < (60 + (Main.down_number * 5)):
+						decision = 1
 					else:
 						decision = 0
 			else:
@@ -266,29 +282,29 @@ func get_opponent_action():
 							decision = 3
 			# 2nd down
 			elif downs_left == 2:
-				# less than 6 yards run 70%
+				# less than 6 yards run inside or short pass 70%
 				if Main.yards_to_down <= 5:
 					if Main.rng.randi()%100 < 70:
 						if Main.rng.randi()%100 <50:
 							decision = 0
 						else:
-							decision = 1
+							decision = 2
 					else:
-						# if not pass, 70% med short 25% hail mary
+						# if not 70% Outer run/Med Pass if not 30% hail mary
 						if Main.rng.randi()%100 < 70:
 							if  Main.rng.randi()%100 < 50:
-								decision = 2
+								decision = 1
 							else:
 								decision = 3
 						else:
 							decision = 4
 				else:
-					# if more thatn 5 yards left 70% pass
+					# if more thatn 5 yards left 70% Outer run / Med pass
 					if Main.rng.randi()%100 < 70:
 						if Main.rng.randi()%100 < 50:
-							decision = 2
+							decision = 1
 						else:
-							decision = 3
+							decision = 2
 					else:
 						#if not 50% run 50% long pass
 						if Main.rng.randi()%100 < 50:
@@ -297,21 +313,21 @@ func get_opponent_action():
 							if Main.rng.randi()%100 < 50:
 								decision = 0
 							else:
-								decision = 1
+								decision = 3
 			# 3rd down
 			elif downs_left == 1:
 				if Main.yards_to_down <= 5:
-					# 3rd down less than 5 yards 70% run
+					# 3rd down less than 5 yards 70% In run, short pass
 					if Main.rng.randi()%100 < 70:
 						if Main.rng.randi()%100 < 50:
 							decision = 0
 						else:
-							decision = 1
+							decision = 2
 					else:
-						# if not run, pass, only 20% long pass
+						# if not Outer run, Med pass, only 20% long pass
 						if Main.rng.randi()%100 < 80:
 							if Main.rng.randi()%100 < 50:
-								decision = 2
+								decision = 1
 							else:
 								decision = 3
 						else:
@@ -331,9 +347,40 @@ func get_opponent_action():
 							#run outer always
 							decision = 1
 			# 4th down
-			else:		
-				# placeholder			
-				decision = Main.rng.randi()% 5
+			else:
+				# yards are going down for the CPU
+				if Main.yards < 40:
+					decision = 10
+				elif Main.yards >= 40 and Main.yards < 49:
+					# safe play to 4 yards
+					if Main.yards_to_down <= 4:
+						# sweet spot for 4 or less
+						if Main.rng.randi()%100 < 70:
+							if Main.rng.randi()%100 < 50:
+								decision = 0
+							else:
+								decision = 2
+						else:
+							if Main.rng.randi()%100 < 60:
+								if Main.rng.randi()%100 < 50:
+									decision = 3
+								else:
+									decision = 1
+							else:
+								# field goal
+								decision = 10
+					else:
+						# field goal o a long run/ pass
+						if Main.rng.randi()%100 < 70:
+							decision = 10
+						else:
+							if Main.rng.randi()%100 < 50:
+								decision = 1
+							else:
+								decision = 3
+				else:
+					#punt if farther than 50
+					decision = 20
 			# put name to action
 			match decision:
 				0:
@@ -346,6 +393,10 @@ func get_opponent_action():
 					op_action = "Medium PASS"
 				4:
 					op_action = "Long PASS"
+				10:
+					op_action = "Field Goal"
+				20:
+					op_action = "Punt"
 	else:
 		print("Not implemented")
 	return [op_action, decision]

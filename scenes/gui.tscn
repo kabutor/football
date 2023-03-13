@@ -108,3 +108,34 @@ offset_left = -18.0
 offset_top = -1.0
 offset_right = 1115.0
 offset_bottom = 283.0
+
+[node name="lbl_player_score" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 442.0
+offset_top = 3.0
+offset_right = 465.0
+offset_bottom = 26.0
+scale = Vector2(2, 2)
+bbcode_enabled = true
+
+[node name="Panel" type="Panel" parent="lbl_player_score"]
+layout_mode = 0
+offset_left = -6.0
+offset_right = 27.0
+offset_bottom = 25.0
+
+[node name="lbl_op_score" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 679.0
+offset_top = 3.0
+offset_right = 702.0
+offset_bottom = 26.0
+scale = Vector2(2, 2)
+bbcode_enabled = true
+
+[node name="Panel" type="Panel" parent="lbl_op_score"]
+layout_mode = 0
+offset_left = -3.0
+offset_top = -0.5
+offset_right = 26.0
+offset_bottom = 24.5

@@ -10,6 +10,9 @@ func _process(delta):
 func _update_down_banner():
 	$lbl_down.text = "[center][b][outline_size=4][outline_color=000000][color=FF0000]"+ str(Main.down_number) + "st[/color] and " + str(Main.yards_to_down)
 
+func update_score():
+	$lbl_player_score.text = "[center][b][outline_size=4][outline_color=000000][color=FF0000]" +  str(Main.player_score)+ "[/color]"
+	$lbl_op_score.text =  "[center][b][outline_size=4][outline_color=000000][color=0000FF]" +  str(Main.op_score)+ "[/color]"
 func yards_runned(yar):
 	$lbl_yards_run.visible = true
 	$lbl_yards_run.text = "[center][b][outline_size=4][outline_color=000000][color=FF0000]" + str(yar) +"[/color]"
