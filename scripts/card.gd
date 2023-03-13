@@ -209,36 +209,133 @@ func get_opponent_action():
 	var roll = null
 	# If playing against CPU
 	if Main.opponent == "CPU":
+		var downs_left = 4 - Main.yards_to_down
 		# AI Decision will be null until choose
 		if Main.player == "attack":
-			# Punt or Field goal on run on the 4th down
-			if Main.down_number == 4:
-				if Main.yards < 40:
-					if Main.rng.randi()%100 < 90:
-						# Go for field goal
-						decision = 10
-				elif Main.yards <= 50 and !decision:
+			# CPU defense decision tree Main.rng.randi()%100 is a 100 die
+			if Main.yards_to_down <= 4:
+				if Main.rng.randi()%100 < (65 + (5 * downs_left) ):
+					decision = 0
+				else:
 					if Main.rng.randi()%100 < 50:
-						decision = 10
-					if Main.rng.randi()%100 < 20:
-						decision = 20
-				elif Main.Yards > 50:
-					# punt
-					decision = 20
-			# if there was not prevous decision, just run
-			# defence should be the more yards needed, the less downs the higher you have to defend passes
-			if !(decision):
-				roll = Main.rng.randi()% 3
-				match roll:
-					0:
-						op_action = "RUN Defense"
-					1:
-						op_action = "PASS Defense"
-					2:
-						op_action= "BLITZ Defense"
+						decision = 1
+					else:
+						decision = 2
+			elif Main.yards_to_down > 4 and Main.yards_to_down <= 10:
+				# run defense more likely as more downs are left
+				if Main.rng.randi()%100 < (60 - (10 * downs_left)):
+					decision = 1
+				else:
+					# no sure about this 
+					if Main.rng.randi()%100 < (50 - (downs_left * 10)):
+						decision = 2
+					else:
+						decision = 0
+			else:
+				# if more than 10 yards left
+				if Main.rng.randi()%100 < 40:
+					decision = 1
+				elif Main.rng.randi()%100 < 40:
+					decision = 2
+				else:
+					decision = 0
+			#Put a name on the decisions
+			match decision:
+				0:
+					op_action = "RUN Defense"
+				1:
+					op_action = "PASS Defense"
+				2:
+					op_action= "BLITZ Defense"
 		else:
-			roll = Main.rng.randi()% 5
-			match roll:
+			# CPU ATTACK decision tree Main.rng.randi()%100 is a 100 die
+			# if 1st down
+			if downs_left == 3:
+				if Main.rng.randi()%100 < 75:
+					if Main.rng.randi()%100 <50:
+						decision = 0
+					else:
+						decision = 1
+				else:
+					if Main.rng.randi()%100 < 50:
+						decision = 4
+					else:
+						if Main.rng.randi()%100 < 70:
+							decision = 2
+						else:
+							decision = 3
+			# 2nd down
+			elif downs_left == 2:
+				# less than 6 yards run 70%
+				if Main.yards_to_down <= 5:
+					if Main.rng.randi()%100 < 70:
+						if Main.rng.randi()%100 <50:
+							decision = 0
+						else:
+							decision = 1
+					else:
+						# if not pass, 70% med short 25% hail mary
+						if Main.rng.randi()%100 < 70:
+							if  Main.rng.randi()%100 < 50:
+								decision = 2
+							else:
+								decision = 3
+						else:
+							decision = 4
+				else:
+					# if more thatn 5 yards left 70% pass
+					if Main.rng.randi()%100 < 70:
+						if Main.rng.randi()%100 < 50:
+							decision = 2
+						else:
+							decision = 3
+					else:
+						#if not 50% run 50% long pass
+						if Main.rng.randi()%100 < 50:
+							decision = 4
+						else:
+							if Main.rng.randi()%100 < 50:
+								decision = 0
+							else:
+								decision = 1
+			# 3rd down
+			elif downs_left == 1:
+				if Main.yards_to_down <= 5:
+					# 3rd down less than 5 yards 70% run
+					if Main.rng.randi()%100 < 70:
+						if Main.rng.randi()%100 < 50:
+							decision = 0
+						else:
+							decision = 1
+					else:
+						# if not run, pass, only 20% long pass
+						if Main.rng.randi()%100 < 80:
+							if Main.rng.randi()%100 < 50:
+								decision = 2
+							else:
+								decision = 3
+						else:
+							decision = 4
+				#if more than 5 yards
+				else:
+					# 50% long pass if not 70 % pass short med, the rest run
+					if Main.rng.randi()%100 < 50:
+						decision = 4
+					else:
+						if Main.rng.randi()%100 < 70:
+							if Main.rng.randi()%100 < 50:
+								decision = 2
+							else:
+								decision = 3
+						else:
+							#run outer always
+							decision = 1
+			# 4th down
+			else:		
+				# placeholder			
+				decision = Main.rng.randi()% 5
+			# put name to action
+			match decision:
 				0:
 					op_action = "Inside RUN"
 				1:
@@ -251,4 +348,4 @@ func get_opponent_action():
 					op_action = "Long PASS"
 	else:
 		print("Not implemented")
-	return [op_action, roll]
+	return [op_action, decision]
